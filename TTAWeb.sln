@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TTAWeb", "TTAWeb\TTAWeb.csproj", "{9021D6CB-A31C-410A-A4A4-339AAE84D4CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TTAWeb", "TTAWeb.csproj", "{9021D6CB-A31C-410A-A4A4-339AAE84D4CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
