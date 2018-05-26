@@ -1,0 +1,12 @@
+﻿@using System.Security.Claims
+
+
+
+<!-- Welcome user and display DateOfBirth claim value -->
+<h1>Welcome, @User.Identity.Name</h1>
+
+
+<ul>
+    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+    <li>@Html.ActionLink("Sign Out", "Signout", "Account")</li>
+</ul>
