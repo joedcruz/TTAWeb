@@ -1,0 +1,17 @@
+﻿<h1>Register</h1>
+<div>
+    <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+        <div>
+            <label>User Name</label>
+            <input id="UserName" type="text" name="userName" />
+        </div>
+        <div>
+            <label>Password</label>
+            <input id="Password" type="text" name="password" />
+        </div>
+
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+</div>

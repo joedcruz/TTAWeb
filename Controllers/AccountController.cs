@@ -17,6 +17,34 @@ namespace TTAWeb
         string newToken;
 
         [HttpGet]
+        public IActionResult Register(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(string userName, string password, string returnUrl=null)
+        {
+            RegistrationInfo registrationInfo = new RegistrationInfo();
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            registrationInfo.MobileNo = userName;
+            registrationInfo.Password = password;
+            var jsonData = new StringContent(JsonConvert.SerializeObject(registrationInfo), Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync("http://localhost:5000/api/register", jsonData);
+            response.EnsureSuccessStatusCode();
+            var responseData = response.Content.ReadAsStringAsync().Result;
+
+            client.Dispose();
+
+            return Redirect(returnUrl ?? "/");
+        }
+
+        [HttpGet]
         public IActionResult Signin(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
