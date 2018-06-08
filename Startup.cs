@@ -18,8 +18,6 @@ namespace TTAWeb
             // As always, handlers must be provided for the requirements of the authorization policies
             services.AddSingleton<IAuthorizationHandler, FormIdentityAuthorizationHandler>();
 
-            services.AddMvc();
-
             // Add cookie authentication so that it's possible to sign-in to test the 
             // custom authorization policy behavior of the sample
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -28,6 +26,10 @@ namespace TTAWeb
                     options.AccessDeniedPath = "/account/denied";
                     options.LoginPath = "/account/signin";
                 });
+
+            services.AddTransient<WebMenuService, WebMenuService>();
+
+            services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

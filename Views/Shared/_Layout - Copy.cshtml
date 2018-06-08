@@ -1,0 +1,192 @@
+﻿@inject TTAWeb.WebMenuService menus
+@using System.Linq
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @*<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <script src="~/Scripts/modernizr-2.6.2.js"></script>*@
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+
+    <style>
+        body {
+            padding-top: 65px;
+        }
+
+        ul, li {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            color: #000000;
+        }
+
+        .nav {
+            color: #FFFFFF;
+        }
+
+        .navbar-nav {
+            color: #FFFFFF;
+        }
+
+        .menu {
+            background: transparent;
+            height: 60px;
+            padding: 0 0px;
+            color: #FFFFFF;
+        }
+
+            .menu > li {
+                display: inline-block;
+                padding: 0px 0px 0px 0px;
+                display: inline-block;
+                text-align: center;
+                line-height: 28px;
+                height: 32px;
+                color: #FFFFFF;
+            }
+
+                .menu > li a {
+                    display: inline-block;
+                    padding: 0px 0px 0px 0px;
+                    display: inline-block;
+                    text-align: center;
+                    line-height: 28px;
+                    height: 32px;
+                    width: 130px;
+                    color: #FFFFFF;
+                }
+
+                    .menu > li a:hover {
+                        display: inline-block;
+                        padding: 0px 0px 1px 0px;
+                        display: inline-block;
+                        text-align: center;
+                        line-height: 28px;
+                        height: 32px;
+                        width: 130px;
+                        color: #FFFFFF;
+                    }
+
+        .sub-menu {
+            position: absolute;
+            display: none;
+            background-color: transparent;
+            width: 130px;
+            color: #FFFFFF;
+            padding: 2px;
+        }
+
+            .sub-menu > li {
+                display: inline-block;
+                padding: 0px 0px 0px 0px;
+                display: inline-block;
+                text-align: center;
+                line-height: 28px;
+                height: 32px;
+                width: 130px;
+                background: #3d3b3b;
+                color: #FFFFFF;
+            }
+
+                .sub-menu > li a:hover {
+                    display: block;
+                    cursor: pointer;
+                    width: 130px;
+                    background: #ddd;
+                    color: #000000
+                }
+
+        .sub-menu2 {
+            position: absolute;
+            display: none;
+            background-color: pink;
+        }
+
+            .sub-menu2 > li {
+                display: block;
+                cursor: pointer;
+                background-color: green;
+            }
+
+                .sub-menu2 > li a:hover {
+                    display: block;
+                    cursor: pointer;
+                    background-color: pink;
+                }
+
+        .sub-menu2 {
+            margin-top: -2px;
+        }
+
+        li:hover .sub-menu {
+            display: block;
+            color: #FFFFFF
+        }
+
+        li:hover .sub-menu2 {
+            display: block;
+            color: #FFFFFF
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+
+
+            @{ List<TTAWeb.WebMenuModel> webMenu = new List<TTAWeb.WebMenuModel>(); }
+
+            @{ webMenu = await menus.GetWebMenu(); }
+
+            @{ int levels = 0; }
+            @{ int maxMenuLevel = menus.GetWebMenu().Result.Max(x => x.ParentId); }
+
+            @foreach (var menuNames in menus.GetWebMenu().Result.Where(n => n.ParentId == 0))
+    {
+        <li>
+            <a asp-area="" asp-controller=@menuNames.FormId asp-action=@menuNames.ItemId>@menuNames.DisplayName</a>
+            <ul class="sub-menu">
+
+                @foreach (var subMenu in menus.GetWebMenu().Result.Where(n => n.ParentId == @menuNames.ItemId))
+        {
+            <li>
+                <a asp-area="" asp-controller=@subMenu.FormId asp-action=@subMenu.ItemId>@subMenu.DisplayName</a>
+            </li>
+}
+            </ul>
+        </li>
+
+levels = levels + 1;
+}
+
+        </ul>
+        
+        @await Html.PartialAsync("_SigninPartial")
+
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+﻿@inject TTAWeb.WebMenuService menus
+@using System.Linq
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @*<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <script src="~/Scripts/modernizr-2.6.2.js"></script>*@
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 15%;
+            background-color: #f1f1f1;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+
+        li a {
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+        }
+
+            li a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            li a:hover:not(.active) {
+                background-color: #555;
+                color: white;
+            }
+    </style>
+
+</head>
+<body>
+      
+
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+
+
+            @{ List<TTAWeb.WebMenuModel> webMenu = new List<TTAWeb.WebMenuModel>(); }
+
+            @{ webMenu = await menus.GetWebMenu(); }
+                                 
+            @{ int itemId = 0;}
+            @{ int ccc = 0; }
+
+            @foreach (var menuNames in webMenu.Where(n => n.ParentId == 0))
+            {
+                <li>
+                    <a asp-area="" asp-controller=@menuNames.FormId asp-action=@menuNames.ItemId>@menuNames.DisplayName</a>
+                    <ul class="sub-menu">
+                        @{ itemId = menuNames.ItemId; }
+                        @foreach (var menuITems in webMenu.OrderBy(ord => ord.ItemId))
+                        {
+
+                            @foreach (var subMenu in webMenu.OrderBy(ord => ord.ItemId))
+                            {
+                                @if (itemId == subMenu.ParentId)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller=@subMenu.FormId asp-action=@subMenu.ItemId>@subMenu.DisplayName</a>
+                                    </li>
+                                    ccc = subMenu.ItemId;
+                                }
+                            }
+                            itemId = ccc;
+                        }
+                    </ul>
+                </li>
+            }
+
+        </ul>
+
+        @await Html.PartialAsync("_SigninPartial")
+
+    </div>
+
+    <div class="container body-content" style="margin-left:15%;padding:1px 16px;height:1000px;">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+</body>
+</html>
