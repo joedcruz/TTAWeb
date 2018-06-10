@@ -7,7 +7,8 @@ namespace TTAWeb
 {
     public interface IWebMenuService
     {
-        Task<List<WebMenuModel>> GetWebMenu();
-        Task<List<WebMenuModel>> GetWebMenu(string userRole);
+        Task<string> GetWebMenu();
+        //Task<List<WebMenuModel>> GetWebMenu();
+        //Task<List<WebMenuModel>> GetWebMenu(string userRole);
     }
 }

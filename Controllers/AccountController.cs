@@ -17,6 +17,13 @@ namespace TTAWeb
         string newToken;
 
         [HttpGet]
+        public IActionResult Welcome(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -100,7 +107,9 @@ namespace TTAWeb
             var identity = new ClaimsIdentity(claims, "UserSpecified");
             await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
 
-            return Redirect(returnUrl ?? "/");             
+            //return Redirect(returnUrl ?? "/");    
+
+            return Redirect("/Account/Welcome");
         }
 
 

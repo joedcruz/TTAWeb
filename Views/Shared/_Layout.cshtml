@@ -7,9 +7,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
-    @*<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
-        <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <script src="~/Scripts/modernizr-2.6.2.js"></script>*@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -22,92 +19,113 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 
-    <style>
-        body {
-            margin: 0;
+    <style>      
+
+        li .glyphicon {
+            margin-right: 10px;
         }
 
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            width: 15%;
-            background-color: #f1f1f1;
+        /* Highlighting rules for nav menu items */
+        li.link-active a,
+        li.link-active a:hover,
+        li.link-active a:focus {
+            background-color: #4189C7;
+            color: white;
+        }
+
+        /* Keep the nav menu independent of scrolling and on top of other items */
+        .main-nav {
             position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+        }
+
+        .main-nav {
             height: 100%;
-            overflow: auto;
+            width: calc(20% - 20px);
+        }
+        .navbar {
+            border-radius: 0px;
+            border-width: 0px;
+            height: 100%;
+        }
+        .navbar-header {
+            float: none;
+        }
+        .navbar-fixed-bottom {
+            float: none;
+        }
+        .navbar-collapse {
+            border-top: 1px solid #444;
+            padding: 0px;
+        }
+        .navbar ul {
+            float: none;
+        }
+        .navbar li {
+            float: none;
+            font-size: 15px;
+            margin: 6px;
+        }
+        .navbar li a {
+            padding: 12px 16px;
+            border-radius: 4px;
+        }
+        .navbar a {
+            /* If a menu item's text is too long, truncate it */
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        li a {
-            display: block;
-            color: #000;
-            padding: 8px 16px;
-            text-decoration: none;
-        }
-
-            li a.active {
-                background-color: #4CAF50;
-                color: white;
-            }
-
-            li a:hover:not(.active) {
-                background-color: #555;
-                color: white;
-            }
     </style>
 
 </head>
+
 <body>
-      
 
-    <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
+    <div class='main-nav'>
 
+        <div class='navbar navbar-inverse'>
 
-            @{ List<TTAWeb.WebMenuModel> webMenu = new List<TTAWeb.WebMenuModel>(); }
+            <div class='navbar-header'>
+                <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                    <span class='sr-only'>Toggle navigation</span>
+                    <span class='icon-bar'></span>
+                    <span class='icon-bar'></span>
+                    <span class='icon-bar'></span>
+                </button>
+                <a class='navbar-brand' [routerLink]="['/home']">TTA Web</a>
+            </div>
 
-            @{ webMenu = await menus.GetWebMenu(); }
-                                 
-            @{ int itemId = 0;}
-            @{ int ccc = 0; }
+            <div class='clearfix'></div>
+            
+            <div class='navbar-collapse collapse'>
 
-            @foreach (var menuNames in webMenu.Where(n => n.ParentId == 0))
-            {
-                <li>
-                    <a asp-area="" asp-controller=@menuNames.FormId asp-action=@menuNames.ItemId>@menuNames.DisplayName</a>
-                    <ul class="sub-menu">
-                        @{ itemId = menuNames.ItemId; }
-                        @foreach (var menuITems in webMenu.OrderBy(ord => ord.ItemId))
-                        {
+                @{ string webMenu; }
+                @{ webMenu = await menus.GetWebMenu(); }
 
-                            @foreach (var subMenu in webMenu.OrderBy(ord => ord.ItemId))
-                            {
-                                @if (itemId == subMenu.ParentId)
-                                {
-                                    <li>
-                                        <a asp-area="" asp-controller=@subMenu.FormId asp-action=@subMenu.ItemId>@subMenu.DisplayName</a>
-                                    </li>
-                                    ccc = subMenu.ItemId;
-                                }
-                            }
-                            itemId = ccc;
-                        }
-                    </ul>
-                </li>
-            }
+                @Html.Raw(webMenu)
 
-        </ul>
+                @await Html.PartialAsync("_SigninPartial")
 
-        @await Html.PartialAsync("_SigninPartial")
+            </div>
 
+            <div class='navbar-fixed-bottom'>
+                <button type='button'></button>
+                <a class='navbar-brand' [routerLinkActive]="['link-active']" [routerLink]="['/account/signout']">Logout</a>
+            </div>
+        </div>
     </div>
 
-    <div class="container body-content" style="margin-left:15%;padding:1px 16px;height:1000px;">
+    <div class="container body-content" style="margin-left:20%;padding:0px 0px;height:1000px;">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
+
 </body>
+
 </html>
