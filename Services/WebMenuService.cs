@@ -14,6 +14,7 @@ namespace TTAWeb
         private readonly IHttpContextAccessor _accessor; // Dependency injection to access the Http context
         string userId;
         string userToken;
+        string _menuString;
 
 
         public WebMenuService(IHttpContextAccessor accessor)
@@ -70,10 +71,57 @@ namespace TTAWeb
 
             var responseData = response.Content.ReadAsStringAsync().Result;;
             //List<WebMenuModel> menu = JsonConvert.DeserializeObject<List<WebMenuModel>>(responseData);
-            string menu = JsonConvert.DeserializeObject(responseData).ToString();
+            List<WebMenuModel> menu = JsonConvert.DeserializeObject<List<WebMenuModel>>(responseData).OrderBy(ord => ord.ItemId).ToList();
+            //string menu = JsonConvert.DeserializeObject(responseData).ToString();
+            _menuString = "";
+            BuildMenu(menu);
+
             client.Dispose();
 
-            return menu;
+            return _menuString;
+            //return menu;
+        }
+
+        public void BuildMenu(List<WebMenuModel> fullMenu)
+        {
+            _menuString = "<ul class='nav navbar-nav'>";
+
+            foreach (var menu in fullMenu)
+            {
+                if (menu.ParentId == 0)
+                {
+                    SubMenu(fullMenu, menu);
+                }
+            }
+            _menuString = _menuString + "</ul>";
+        }
+
+        public void SubMenu(List<WebMenuModel> fullMenu, WebMenuModel menu)
+        {
+            //_menuList = _menuList + "<li [routerLinkActive]=\"['link-active']\">< a[routerLink] = \"['/home']\" >< span class='glyphicon glyphicon-home'></span>" + page.DisplayName + "</a>";
+            _menuString = _menuString + "<li><a><span class='glyphicon glyphicon-home'></span>" + menu.DisplayName + "</a>";
+
+            var subMenus = fullMenu.Where(p => p.ParentId == menu.ItemId);
+
+            if (subMenus.Count() > 0)
+            {
+                _menuString = _menuString + "<ul class='nav navbar-nav'>";
+
+                foreach (WebMenuModel p in subMenus)
+                {
+                    if (fullMenu.Count(x => x.ParentId == p.ItemId) > 0)
+                    {
+                        SubMenu(fullMenu, p);
+                    }
+                    else
+                    {
+                        //_menuList = _menuList + "<li [routerLinkActive]=\"['link-active']\">< a[routerLink] = \"['/home']\" >< span class='glyphicon glyphicon-th-list'></span>" + p.DisplayName + "</a></li>";
+                        _menuString = _menuString + "<li><a><span class='glyphicon glyphicon-th-list'></span>" + p.DisplayName + "</a></li>";
+                    }
+                }
+                _menuString = _menuString + "</ul>";
+            }
+            _menuString = _menuString + "</li>";
         }
     }
 }
