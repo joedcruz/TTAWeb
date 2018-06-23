@@ -1,6 +1,58 @@
 ﻿@using System.Security.Claims
 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/6DB947FD-0910-944A-8A9B-18D05192C080/main.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
 
+
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://localhost:5000/api/UserInfo",
+  "method": "GET",
+  "headers": {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDM0Y2U1OGYzMmU0M2QxYjEwMmNmMGE4ZTAzZTMyMyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJ1c2VyMzUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZmMWNjNjZlLTgyMDEtNDczYi1iYzRjLTNkYTVkYzdlM2Q3YyIsImV4cCI6MTUzNjI0MTYyNiwiaXNzIjoiVFRBIiwiYXVkIjoiVFRBIn0._DFtmIQ68O3u5VWIBQfCMotX8QR5unGp4b95EQZB570",
+    "Cache-Control": "no-cache",
+    "Postman-Token": "33d0352e-9d6f-4973-92e1-1738c5d2008c"
+  }
+}
+
+/*
+$.ajax(settings).done(function (response) {
+ console.log(response);
+});
+*/
+
+$(document).ready(function(){
+    $("#btn1").click(function(){
+
+		$.ajax(settings).done(function (response) {
+
+		$("#test1").text(JSON.stringify(response));
+
+
+		});
+
+    });
+
+
+});
+
+    </script>
+
+</head>
+<body>
+
+    <p id="test1">The API response will appear here! Click the Button</p>
+
+
+    <button id="btn1">Call API</button>
+
+
+</body>
 
 <!-- Welcome user and display DateOfBirth claim value -->
 <h1>Welcome, @User.Identity.Name</h1>
